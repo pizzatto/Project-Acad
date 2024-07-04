@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AntDesign } from '@expo/vector-icons';
 import {
   View,
   Text,
@@ -6,9 +7,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
 
 const Form = () => {
+  const navigation = useNavigation(); 
+
   const [nome, setNome] = useState('');
   const [sexo, setSexo] = useState('');
   const [idade, setIdade] = useState('');
@@ -17,20 +23,28 @@ const Form = () => {
   const [objetivo, setObjetivo] = useState('');
 
   const enviarFormulario = () => {
-    // Lógica para enviar os dados do formulário
     console.log('Dados enviados:', { nome, sexo, idade, pesoAltura, frequencia, objetivo });
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-      <View style={styles.formContainer}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      enabled
+    >
+      <ScrollView contentContainerStyle={styles.formContainer}>
+        {/* Botão de Voltar */}
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.voltarButton}>
+        <AntDesign name="left" size={24} color="black" />
+        </TouchableOpacity>
+
         {[
-          { label: 'NOME COMPLETO', value: nome, onChangeText: setNome },
-          { label: 'SEXO', value: sexo, onChangeText: setSexo },
-          { label: 'IDADE', value: idade, onChangeText: setIdade },
-          { label: 'PESO / ALTURA', value: pesoAltura, onChangeText: setPesoAltura },
-          { label: 'FREQUÊNCIA POR SEMANA', value: frequencia, onChangeText: setFrequencia },
-          { label: 'OBJETIVO', value: objetivo, onChangeText: setObjetivo },
+          { label: 'NOME COMPLETO', value: nome, onChangeText: setNome, keyboardType: 'default' },
+          { label: 'SEXO', value: sexo, onChangeText: setSexo, keyboardType: 'default' },
+          { label: 'IDADE', value: idade, onChangeText: setIdade, keyboardType: 'number-pad' },
+          { label: 'PESO / ALTURA', value: pesoAltura, onChangeText: setPesoAltura, keyboardType: 'default' },
+          { label: 'FREQUÊNCIA POR SEMANA', value: frequencia, onChangeText: setFrequencia, keyboardType: 'number-pad' },
+          { label: 'OBJETIVO', value: objetivo, onChangeText: setObjetivo, keyboardType: 'default' },
         ].map((input, index) => (
           <View key={index} style={styles.inputGroup}>
             <Text style={styles.label}>{input.label}</Text>
@@ -40,31 +54,38 @@ const Form = () => {
               onChangeText={input.onChangeText}
               placeholder={`Digite seu ${input.label.toLowerCase()}`}
               placeholderTextColor="#A0A0A0"
+              keyboardType={input.keyboardType}
             />
           </View>
         ))}
-
-        <TouchableOpacity style={styles.enviarButton} onPress={enviarFormulario}>
+        <TouchableOpacity style={styles.enviarButton} onPress={enviarFormulario} activeOpacity={0.8}>
           <Text style={styles.enviarButtonText}>ENVIAR</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
+  voltarButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 40,
+  },
+  voltarButtonText: {
+    color: '#0066CC',
+    fontSize: 16,
   },
   formContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 20,
     paddingHorizontal: 20,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 15,
     width: '100%',
   },
   label: {
@@ -74,27 +95,36 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    height: 40,
+    height: 45,
     width: '100%',
-    borderColor: '#555',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#DDD',
     borderWidth: 1,
-    marginVertical: 5,
-    padding: 10,
-    color: '#333',
     borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
   },
   enviarButton: {
-    backgroundColor: '#333',
-    borderRadius: 25, // Menor valor para o botão ficar um pouco menor
-    paddingVertical: 8, // Menor valor para o preenchimento vertical
-    paddingHorizontal: 32, // Menor valor para o preenchimento horizontal
-    marginVertical: 20,
+    marginTop: 20,
+    backgroundColor: 'black',
+    borderRadius: 8,
+    paddingVertical: 12,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
   },
   enviarButtonText: {
-    color: '#F5F5F5',
-    fontSize: 20, // Tamanho um pouco menor para o texto do botão
+    color: '#FFFFFF',
+    fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Inter',
     textAlign: 'center',
   },
 });

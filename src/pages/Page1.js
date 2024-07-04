@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Entypo, Feather } from '@expo/vector-icons';  // Importe os ícones necessários
+import { Entypo, Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Page1 = () => {
   const getCurrentDate = () => {
@@ -13,6 +14,7 @@ const Page1 = () => {
 
   const handleTreino1 = () => {
     console.log('Botão "Treino 1" pressionado.');
+      navigation.navigate('Form');
   };
 
   return (
